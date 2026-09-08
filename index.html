@@ -1,0 +1,4611 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0a0c0f">
+
+<title>Rust Intel — Rust 2026</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+    --orange:#d96b25;
+    --orange-light:#ff9a55;
+    --orange-dark:#8e3e12;
+    --bg:#080a0c;
+    --bg2:#0d1013;
+    --panel:#111519;
+    --panel2:#171c20;
+    --panel3:#1d2328;
+    --border:#30383e;
+    --text:#eeeeee;
+    --muted:#92999e;
+    --green:#68c963;
+    --red:#db5555;
+    --yellow:#d7ae45;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(
+            ellipse at 50% -15%,
+            #353b40 0%,
+            #161a1d 28%,
+            #080a0c 65%
+        );
+    color:var(--text);
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(7,9,11,.97);
+    border-bottom:2px solid var(--orange);
+    box-shadow:0 4px 25px rgba(0,0,0,.45);
+}
+
+.header-inner{
+    max-width:1450px;
+    margin:auto;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:1000;
+    letter-spacing:2px;
+    white-space:nowrap;
+}
+
+.logo span{
+    color:var(--orange);
+}
+
+nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:flex-end;
+    gap:5px;
+}
+
+.nav-btn{
+    padding:9px 12px;
+    color:#92999e;
+    background:transparent;
+    border:1px solid transparent;
+    border-radius:5px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+    color:#fff;
+    background:#191f23;
+    border-color:var(--orange);
+}
+
+.hero{
+    min-height:430px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:70px 20px;
+    background:
+        linear-gradient(
+            rgba(0,0,0,.35),
+            rgba(0,0,0,.88)
+        ),
+        radial-gradient(
+            circle at 50% 20%,
+            #62676a,
+            #1b2023 38%,
+            #090b0d 75%
+        );
+}
+
+.hero-content{
+    max-width:1000px;
+}
+
+.hero h1{
+    font-size:clamp(48px,9vw,100px);
+    font-weight:1000;
+    letter-spacing:7px;
+    line-height:1;
+    text-shadow:0 10px 40px #000;
+}
+
+.hero h1 span{
+    color:var(--orange);
+}
+
+.hero p{
+    margin-top:18px;
+    color:#b9bec1;
+    font-size:18px;
+    line-height:1.6;
+}
+
+.hero-actions{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:30px;
+}
+
+.btn{
+    border:0;
+    border-radius:5px;
+    padding:13px 20px;
+    color:#fff;
+    background:var(--orange);
+    font-weight:800;
+    transition:.15s;
+}
+
+.btn:hover{
+    background:var(--orange-light);
+    transform:translateY(-1px);
+}
+
+.btn.secondary{
+    background:#252b30;
+    border:1px solid #3b444b;
+}
+
+.btn.secondary:hover{
+    border-color:var(--orange);
+    background:#2b3238;
+}
+
+main{
+    max-width:1450px;
+    margin:auto;
+    padding:45px 20px 100px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+    animation:sectionIn .2s ease;
+}
+
+@keyframes sectionIn{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.section-heading{
+    margin-bottom:25px;
+}
+
+.section-heading h2{
+    font-size:34px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.section-heading p{
+    color:var(--muted);
+    margin-top:7px;
+    line-height:1.5;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(230px,1fr));
+    gap:16px;
+}
+
+.card{
+    padding:24px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:
+        linear-gradient(
+            145deg,
+            #191f23,
+            #101417
+        );
+    transition:.18s;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+    border-color:var(--orange);
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.25);
+}
+
+.card-icon{
+    font-size:36px;
+    margin-bottom:14px;
+}
+
+.card h3{
+    font-size:19px;
+    margin-bottom:8px;
+}
+
+.card p{
+    color:var(--muted);
+    line-height:1.55;
+}
+
+.tag{
+    display:inline-block;
+    margin-top:15px;
+    padding:5px 8px;
+    border-radius:4px;
+    background:#292f34;
+    color:#bbb;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.panel{
+    background:
+        linear-gradient(
+            145deg,
+            #13181c,
+            #0f1316
+        );
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:23px;
+    margin-bottom:18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(210px,1fr));
+    gap:15px;
+}
+
+label{
+    display:block;
+    color:#b3b9bd;
+    font-size:13px;
+    margin-bottom:7px;
+}
+
+input,
+select{
+    width:100%;
+    padding:12px;
+    color:#fff;
+    background:#080a0c;
+    border:1px solid #363f46;
+    border-radius:5px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:var(--orange);
+}
+
+.search{
+    position:relative;
+}
+
+.search input{
+    padding-left:40px;
+}
+
+.search-icon{
+    position:absolute;
+    left:13px;
+    top:11px;
+    color:#777;
+    pointer-events:none;
+}
+
+.table-wrap{
+    overflow:auto;
+    border:1px solid #252c31;
+    border-radius:5px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+th,
+td{
+    padding:12px;
+    text-align:left;
+    border-bottom:1px solid #293036;
+}
+
+th{
+    color:var(--orange-light);
+    background:#181d21;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    position:sticky;
+    top:0;
+    z-index:5;
+}
+
+td{
+    color:#d8dbdd;
+}
+
+tr:hover td{
+    background:#171c20;
+}
+
+.item-link{
+    color:var(--orange-light);
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.item-link:hover{
+    text-decoration:underline;
+}
+
+code{
+    color:#b8bec2;
+    font-size:12px;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 7px;
+    border-radius:4px;
+    background:#252c31;
+    color:#c3c8cb;
+    font-size:11px;
+}
+
+.badge.green{
+    background:#163019;
+    color:#8cda87;
+}
+
+.badge.red{
+    background:#341717;
+    color:#e68d8d;
+}
+
+.badge.orange{
+    background:#382115;
+    color:#efaa77;
+}
+
+.stats{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.stat{
+    padding:9px 12px;
+    border:1px solid var(--border);
+    border-radius:5px;
+    background:#181e22;
+    color:#9da4a8;
+}
+
+.stat strong{
+    color:#fff;
+}
+
+.pagination{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:18px;
+}
+
+.page-btn{
+    padding:8px 12px;
+    color:#ddd;
+    background:#171c20;
+    border:1px solid var(--border);
+    border-radius:4px;
+}
+
+.page-btn:hover,
+.page-btn.active{
+    background:var(--orange);
+    border-color:var(--orange);
+}
+
+.page-btn:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.detail{
+    display:none;
+    padding:25px;
+    margin-top:18px;
+    border:1px solid var(--orange);
+    border-radius:7px;
+    background:#0d1114;
+}
+
+.detail.show{
+    display:block;
+}
+
+.detail h3{
+    color:var(--orange-light);
+    font-size:28px;
+}
+
+.shortname{
+    margin-top:5px;
+    margin-bottom:20px;
+    color:#727a7f;
+    font-family:monospace;
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(145px,1fr));
+    gap:10px;
+}
+
+.detail-box{
+    padding:13px;
+    border:1px solid #293036;
+    border-radius:5px;
+    background:#171c20;
+}
+
+.detail-box small{
+    display:block;
+    color:#777;
+    margin-bottom:5px;
+}
+
+.detail-box strong{
+    color:#eee;
+}
+
+.recipe{
+    margin-top:25px;
+}
+
+.recipe h4{
+    margin-bottom:10px;
+    color:#ccc;
+}
+
+.recipe-row{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    padding:9px 0;
+    border-bottom:1px solid #293036;
+}
+
+.source{
+    margin-top:20px;
+    color:#777;
+    font-size:12px;
+}
+
+.notice{
+    padding:16px;
+    border-radius:5px;
+    background:#302015;
+    border:1px solid #71401e;
+    color:#e6b18c;
+    line-height:1.6;
+}
+
+.success{
+    padding:16px;
+    margin-bottom:18px;
+    border-radius:5px;
+    background:#142516;
+    border:1px solid #315e34;
+    color:#a9dca7;
+}
+
+.warning{
+    padding:16px;
+    margin-bottom:18px;
+    border-radius:5px;
+    background:#302a15;
+    border:1px solid #675820;
+    color:#ddcb85;
+}
+
+.decay-result{
+    margin-top:22px;
+    padding:22px;
+    border-left:4px solid var(--orange);
+    background:#171c20;
+}
+
+.big-time{
+    margin:13px 0;
+    color:var(--orange-light);
+    font-size:42px;
+    font-weight:1000;
+}
+
+.progress{
+    height:18px;
+    margin:18px 0;
+    overflow:hidden;
+    background:#07090a;
+    border-radius:10px;
+}
+
+.progress div{
+    height:100%;
+    background:
+        linear-gradient(
+            90deg,
+            #9f4214,
+            #ff914d
+        );
+    transition:width .2s;
+}
+
+.calculator-output{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(170px,1fr));
+    gap:10px;
+    margin-top:18px;
+}
+
+.output{
+    padding:15px;
+    background:#181e22;
+    border:1px solid #293036;
+    border-radius:5px;
+}
+
+.output small{
+    display:block;
+    color:#777;
+    margin-bottom:5px;
+}
+
+.output strong{
+    color:#fff;
+    font-size:17px;
+}
+
+footer{
+    padding:40px 20px;
+    text-align:center;
+    background:#07090b;
+    border-top:1px solid #293036;
+    color:#747b7f;
+}
+
+footer strong{
+    color:var(--orange);
+}
+
+footer .version{
+    margin-top:10px;
+    color:#aaa;
+}
+
+@media(max-width:800px){
+
+    .header-inner{
+        flex-direction:column;
+    }
+
+    nav{
+        justify-content:center;
+    }
+
+    .hero{
+        min-height:370px;
+    }
+
+    .hero h1{
+        font-size:48px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="header-inner">
+
+<div class="logo">
+RUST<span>INTEL</span>
+</div>
+
+<nav>
+
+<button class="nav-btn active"
+onclick="showSection('home',this)">
+Home
+</button>
+
+<button class="nav-btn"
+onclick="showSection('decay',this)">
+Decay Timer
+</button>
+
+<button class="nav-btn"
+onclick="showSection('building',this)">
+Building
+</button>
+
+<button class="nav-btn"
+onclick="showSection('raid',this)">
+Raid Info
+</button>
+
+<button class="nav-btn"
+onclick="showSection('weapons',this)">
+Weapons
+</button>
+
+<button class="nav-btn"
+onclick="showSection('items',this)">
+Items
+</button>
+
+</nav>
+
+</div>
+
+</header>
+
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+RUST <span>INTEL</span>
+</h1>
+
+<p>
+Rust reference database for building, decay,
+raiding, weapons, items and crafting.
+</p>
+
+<div class="hero-actions">
+
+<button class="btn"
+onclick="showSectionById('items')">
+VIEW ITEMS
+</button>
+
+<button class="btn secondary"
+onclick="showSectionById('decay')">
+DECAY TIMER
+</button>
+
+<button class="btn secondary"
+onclick="showSectionById('building')">
+BUILDING COSTS
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<main>
+
+
+<!-- =====================================================
+     HOME
+====================================================== -->
+
+<section id="home" class="section active">
+
+<div class="section-heading">
+
+<h2>Rust Database</h2>
+
+<p>
+A single reference page for Rust information.
+</p>
+
+</div>
+
+
+<div class="cards">
+
+<div class="card"
+onclick="showSectionById('decay')">
+
+<div class="card-icon">⏱️</div>
+
+<h3>Decay Timer</h3>
+
+<p>
+Calculate building decay and see the estimated
+time represented for each 100 HP.
+</p>
+
+<span class="tag">
+DECAY
+</span>
+
+</div>
+
+
+<div class="card"
+onclick="showSectionById('building')">
+
+<div class="card-icon">🧱</div>
+
+<h3>Building Costs</h3>
+
+<p>
+See placement and upgrade material requirements
+for building pieces.
+</p>
+
+<span class="tag">
+BUILDING
+</span>
+
+</div>
+
+
+<div class="card"
+onclick="showSectionById('items')">
+
+<div class="card-icon">📦</div>
+
+<h3>Items Database</h3>
+
+<p>
+Search the embedded Rust item catalog by name,
+shortname and category.
+</p>
+
+<span class="tag">
+ITEMS
+</span>
+
+</div>
+
+
+<div class="card"
+onclick="showSectionById('raid')">
+
+<div class="card-icon">💣</div>
+
+<h3>Raid Information</h3>
+
+<p>
+Quick reference for common building raid targets
+and explosive requirements.
+</p>
+
+<span class="tag">
+RAID
+</span>
+
+</div>
+
+
+<div class="card"
+onclick="showSectionById('weapons')">
+
+<div class="card-icon">🔫</div>
+
+<h3>Weapons</h3>
+
+<p>
+Weapons and ammunition reference.
+</p>
+
+<span class="tag">
+WEAPONS
+</span>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     DECAY
+====================================================== -->
+
+<section id="decay" class="section">
+
+<div class="section-heading">
+
+<h2>Decay Timer</h2>
+
+<p>
+Building decay reference. The values here are kept
+separate from construction costs.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="grid">
+
+<div>
+
+<label>Building Grade</label>
+
+<select id="decayGrade"
+onchange="calculateDecay()">
+
+<option value="twig">
+Twig
+</option>
+
+<option value="wood">
+Wood
+</option>
+
+<option value="stone"
+selected>
+Stone
+</option>
+
+<option value="metal">
+Sheet Metal
+</option>
+
+<option value="armored">
+Armored
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>Current HP</label>
+
+<input
+id="currentHP"
+type="number"
+min="0"
+value="500"
+oninput="calculateDecay()">
+
+</div>
+
+</div>
+
+
+<div class="decay-result">
+
+<h3 id="decayName">
+Stone
+</h3>
+
+<div class="big-time"
+id="decayTime">
+—
+</div>
+
+<p id="decayDescription">
+—
+</p>
+
+<div class="progress">
+
+<div
+id="hpProgress"
+style="width:100%">
+</div>
+
+</div>
+
+
+<div class="calculator-output">
+
+<div class="output">
+
+<small>
+Maximum HP
+</small>
+
+<strong id="maxHP">
+—
+</strong>
+
+</div>
+
+
+<div class="output">
+
+<small>
+Decay Rate
+</small>
+
+<strong id="hpRate">
+—
+</strong>
+
+</div>
+
+
+<div class="output">
+
+<small>
+Time Per 100 HP
+</small>
+
+<strong id="hundredTime">
+—
+</strong>
+
+</div>
+
+
+<div class="output">
+
+<small>
+Remaining HP
+</small>
+
+<strong id="remainingHP">
+—
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>
+100 HP Breakdown
+</h3>
+
+<br>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>HP Lost</th>
+<th>HP Remaining</th>
+<th>Time Per 100 HP</th>
+<th>Total Estimated Time</th>
+</tr>
+
+</thead>
+
+<tbody id="decayTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<div class="notice">
+
+<strong>Important:</strong>
+Decay can depend on the server's configuration and
+Tool Cupboard/upkeep state. This calculator is intended
+as a reference and should not be treated as a guarantee
+for every custom server configuration.
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     BUILDING
+====================================================== -->
+
+<section id="building" class="section">
+
+<div class="section-heading">
+
+<h2>Building Costs</h2>
+
+<p>
+This section is for placement and upgrade costs —
+not decay.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="grid">
+
+<div>
+
+<label>
+Building Piece
+</label>
+
+<select id="buildingPiece"
+onchange="renderBuilding()">
+
+<option value="foundation">
+Square Foundation
+</option>
+
+<option value="triangle">
+Triangle Foundation
+</option>
+
+<option value="wall">
+Wall
+</option>
+
+<option value="halfwall">
+Half Wall
+</option>
+
+<option value="lowwall">
+Low Wall
+</option>
+
+<option value="floor">
+Floor / Ceiling
+</option>
+
+<option value="doorway">
+Doorway
+</option>
+
+<option value="window">
+Window
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3 id="buildingTitle">
+Square Foundation
+</h3>
+
+<br>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Grade</th>
+<th>Upgrade Material</th>
+<th>Cost</th>
+<th>Maximum HP</th>
+</tr>
+
+</thead>
+
+<tbody id="buildingTable">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     RAID
+====================================================== -->
+
+<section id="raid" class="section">
+
+<div class="section-heading">
+
+<h2>Raid Information</h2>
+
+<p>
+Quick reference for common hard-side building targets.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="search">
+
+<span class="search-icon">
+🔎
+</span>
+
+<input
+id="raidSearch"
+placeholder="Search raid targets..."
+oninput="filterTable('raidSearch','raidRows')">
+
+</div>
+
+<br>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Target</th>
+<th>HP</th>
+<th>C4</th>
+<th>Rockets</th>
+<th>Satchels</th>
+<th>Explosive 5.56</th>
+</tr>
+
+</thead>
+
+<tbody id="raidRows">
+
+<tr>
+<td>Wood Wall</td>
+<td>250</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>49</td>
+</tr>
+
+<tr>
+<td>Stone Wall</td>
+<td>500</td>
+<td>2</td>
+<td>4</td>
+<td>10</td>
+<td>185</td>
+</tr>
+
+<tr>
+<td>Sheet Metal Wall</td>
+<td>1000</td>
+<td>4</td>
+<td>8</td>
+<td>23</td>
+<td>400</td>
+</tr>
+
+<tr>
+<td>Armored Wall</td>
+<td>2000</td>
+<td>8</td>
+<td>15</td>
+<td>46</td>
+<td>799</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     WEAPONS
+====================================================== -->
+
+<section id="weapons" class="section">
+
+<div class="section-heading">
+
+<h2>Weapons</h2>
+
+<p>
+Weapon and ammunition quick reference.
+</p>
+
+</div>
+
+
+<div class="panel">
+
+<div class="search">
+
+<span class="search-icon">
+🔎
+</span>
+
+<input
+id="weaponSearch"
+placeholder="Search weapons..."
+oninput="filterTable('weaponSearch','weaponRows')">
+
+</div>
+
+<br>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Weapon</th>
+<th>Category</th>
+<th>Ammunition</th>
+</tr>
+
+</thead>
+
+<tbody id="weaponRows">
+
+<tr>
+<td>Assault Rifle</td>
+<td>Rifle</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>LR-300 Assault Rifle</td>
+<td>Rifle</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>AK-47</td>
+<td>Rifle</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>Bolt Action Rifle</td>
+<td>Rifle</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>L96 Rifle</td>
+<td>Rifle</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>Thompson</td>
+<td>SMG</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>MP5A4</td>
+<td>SMG</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>Custom SMG</td>
+<td>SMG</td>
+<td>5.56 Rifle Ammo</td>
+</tr>
+
+<tr>
+<td>Revolver</td>
+<td>Pistol</td>
+<td>Pistol Bullet</td>
+</tr>
+
+<tr>
+<td>Python Revolver</td>
+<td>Pistol</td>
+<td>Pistol Bullet</td>
+</tr>
+
+<tr>
+<td>Semi-Automatic Pistol</td>
+<td>Pistol</td>
+<td>Pistol Bullet</td>
+</tr>
+
+<tr>
+<td>Bow</td>
+<td>Bow</td>
+<td>Wooden Arrow</td>
+</tr>
+
+<tr>
+<td>Crossbow</td>
+<td>Bow</td>
+<td>Wooden Arrow</td>
+</tr>
+
+<tr>
+<td>Compound Bow</td>
+<td>Bow</td>
+<td>Wooden Arrow</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ITEMS
+====================================================== -->
+
+<section id="items" class="section">
+
+<div class="section-heading">
+
+<h2>Rust Items Database</h2>
+
+<p>
+Search the embedded item database. No external request is
+required for the item list.
+</p>
+
+</div>
+
+
+<div class="success">
+
+<strong id="databaseCount">
+0
+</strong>
+ item records are embedded directly in this HTML file.
+
+Use the search box to find an item by its display name,
+shortname or category.
+
+</div>
+
+
+<div class="panel">
+
+<div class="grid">
+
+<div>
+
+<label>
+Search
+</label>
+
+<div class="search">
+
+<span class="search-icon">
+🔎
+</span>
+
+<input
+id="itemSearch"
+placeholder="Name, shortname or category..."
+oninput="renderItems()">
+
+</div>
+
+</div>
+
+
+<div>
+
+<label>
+Category
+</label>
+
+<select
+id="itemCategory"
+onchange="renderItems()">
+
+<option value="all">
+All Categories
+</option>
+
+<option value="Ammo">
+Ammo
+</option>
+
+<option value="Attire">
+Attire
+</option>
+
+<option value="Component">
+Component
+</option>
+
+<option value="Construction">
+Construction
+</option>
+
+<option value="Electrical">
+Electrical
+</option>
+
+<option value="Food">
+Food
+</option>
+
+<option value="Fun">
+Fun
+</option>
+
+<option value="General">
+General
+</option>
+
+<option value="Medical">
+Medical
+</option>
+
+<option value="Misc">
+Misc
+</option>
+
+<option value="Resource">
+Resource
+</option>
+
+<option value="Tool">
+Tool
+</option>
+
+<option value="Weapon">
+Weapon
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+Items Per Page
+</label>
+
+<select
+id="itemsPerPage"
+onchange="
+currentPage=1;
+renderItems();
+">
+
+<option value="25">
+25
+</option>
+
+<option value="50"
+selected>
+50
+</option>
+
+<option value="100">
+100
+</option>
+
+<option value="250">
+250
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<div class="stats">
+
+<div class="stat">
+Total:
+<strong id="totalItems">
+0
+</strong>
+</div>
+
+<div class="stat">
+Matching:
+<strong id="matchingItems">
+0
+</strong>
+</div>
+
+<div class="stat">
+Page:
+<strong id="currentPageText">
+1
+</strong>
+</div>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Item
+</th>
+
+<th>
+Shortname
+</th>
+
+<th>
+Category
+</th>
+
+<th>
+Craftable
+</th>
+
+<th>
+Workbench
+</th>
+
+</tr>
+
+</thead>
+
+<tbody id="itemRows">
+</tbody>
+
+</table>
+
+</div>
+
+
+<div
+class="pagination"
+id="pagination">
+</div>
+
+</div>
+
+
+<div
+class="detail"
+id="itemDetail">
+
+<h3 id="detailName">
+Item
+</h3>
+
+<div
+class="shortname"
+id="detailShortname">
+shortname
+</div>
+
+
+<div class="detail-grid">
+
+<div class="detail-box">
+
+<small>
+Category
+</small>
+
+<strong id="detailCategory">
+—
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>
+Stack Size
+</small>
+
+<strong id="detailStack">
+—
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>
+Item ID
+</small>
+
+<strong id="detailId">
+—
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>
+Craftable
+</small>
+
+<strong id="detailCraftable">
+—
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>
+Workbench
+</small>
+
+<strong id="detailWorkbench">
+—
+</strong>
+
+</div>
+
+
+<div class="detail-box">
+
+<small>
+Craft Time
+</small>
+
+<strong id="detailCraftTime">
+—
+</strong>
+
+</div>
+
+</div>
+
+
+<div class="recipe">
+
+<h4>
+Crafting Cost
+</h4>
+
+<div id="recipe">
+No crafting recipe embedded for this item.
+</div>
+
+</div>
+
+
+<div class="source">
+
+Data status:
+<strong id="detailStatus">
+Embedded database record
+</strong>
+
+</div>
+
+</div>
+
+
+</section>
+
+</main>
+
+
+<footer>
+
+<div>
+Rust Intel — Rust information reference
+</div>
+
+<div class="version">
+<strong>Updated for Rust 2026</strong>
+</div>
+
+<div style="margin-top:8px;font-size:12px">
+Not affiliated with Facepunch Studios.
+</div>
+
+</footer>
+
+
+<script>
+
+/* ============================================================
+   RUST INTEL
+   SINGLE-FILE DATABASE
+   ============================================================
+
+   Every item displayed by the Items tab is stored locally in
+   this JavaScript array.
+
+   Format:
+
+   {
+      name,
+      shortname,
+      category,
+      id,
+      stack,
+      craftable,
+      workbench,
+      craftTime,
+      recipe:[]
+   }
+
+   Additional records can be added without changing the UI.
+============================================================ */
+
+
+/* ============================================================
+   ITEM DATABASE
+============================================================ */
+
+const RUST_ITEMS = [
+
+/* ---------------- RESOURCES ---------------- */
+
+{
+name:"Wood",
+shortname:"wood",
+category:"Resource",
+id:3655341,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Stone",
+shortname:"stones",
+category:"Resource",
+id:-2099697608,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Metal Ore",
+shortname:"metal.ore",
+category:"Resource",
+id:-4031221,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Sulfur Ore",
+shortname:"sulfur.ore",
+category:"Resource",
+id:-1157596551,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"High Quality Metal Ore",
+shortname:"hq.metal.ore",
+category:"Resource",
+id:1987447227,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Metal Fragments",
+shortname:"metal.fragments",
+category:"Resource",
+id:69511070,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Sulfur",
+shortname:"sulfur",
+category:"Resource",
+id:-1581843485,
+stack:1000,
+craftable:true,
+workbench:0,
+craftTime:1,
+recipe:[
+["Sulfur Ore",1]
+]
+},
+
+{
+name:"Charcoal",
+shortname:"charcoal",
+category:"Resource",
+id:-1938052175,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Cloth",
+shortname:"cloth",
+category:"Resource",
+id:1779183902,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Leather",
+shortname:"leather",
+category:"Resource",
+id:-1243761705,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Animal Fat",
+shortname:"fat.animal",
+category:"Resource",
+id:-1018587433,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Bone Fragments",
+shortname:"bone.fragments",
+category:"Resource",
+id:-1938052175,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"High Quality Metal",
+shortname:"metal.refined",
+category:"Resource",
+id:-1982036270,
+stack:100,
+craftable:true,
+workbench:0,
+craftTime:20,
+recipe:[
+["Metal Ore",100],
+["Wood",1]
+]
+},
+
+{
+name:"Gun Powder",
+shortname:"gunpowder",
+category:"Resource",
+id:-1571052566,
+stack:1000,
+craftable:true,
+workbench:1,
+craftTime:3,
+recipe:[
+["Charcoal",30],
+["Sulfur",20]
+]
+},
+
+/* ---------------- AMMO ---------------- */
+
+{
+name:"5.56 Rifle Ammo",
+shortname:"ammo.rifle",
+category:"Ammo",
+id:-1211166256,
+stack:128,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",5]
+]
+},
+
+{
+name:"5.56 Rifle Ammo - Incendiary",
+shortname:"ammo.rifle.incendiary",
+category:"Ammo",
+id:605467368,
+stack:128,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",5],
+["Sulfur",5]
+]
+},
+
+{
+name:"5.56 Rifle Ammo - HV",
+shortname:"ammo.rifle.hv",
+category:"Ammo",
+id:-1211166256,
+stack:128,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",5]
+]
+},
+
+{
+name:"5.56 Rifle Ammo - Explosive",
+shortname:"ammo.rifle.explosive",
+category:"Ammo",
+id:605467368,
+stack:128,
+craftable:true,
+workbench:3,
+craftTime:10,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",20],
+["Sulfur",20]
+]
+},
+
+{
+name:"Pistol Bullet",
+shortname:"ammo.pistol",
+category:"Ammo",
+id:-1211166256,
+stack:128,
+craftable:true,
+workbench:1,
+craftTime:5,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",5]
+]
+},
+
+{
+name:"Pistol Bullet - Incendiary",
+shortname:"ammo.pistol.fire",
+category:"Ammo",
+id:-2098934503,
+stack:128,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",10],
+["Gun Powder",5],
+["Sulfur",5]
+]
+},
+
+{
+name:"12 Gauge Buckshot",
+shortname:"ammo.shotgun",
+category:"Ammo",
+id:-1685290200,
+stack:64,
+craftable:true,
+workbench:1,
+craftTime:5,
+recipe:[
+["Metal Fragments",5],
+["Gun Powder",5]
+]
+},
+
+{
+name:"12 Gauge Slug",
+shortname:"ammo.shotgun.slug",
+category:"Ammo",
+id:1680127168,
+stack:64,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",5],
+["Gun Powder",5]
+]
+},
+
+{
+name:"12 Gauge Incendiary",
+shortname:"ammo.shotgun.fire",
+category:"Ammo",
+id:-1036635990,
+stack:64,
+craftable:true,
+workbench:2,
+craftTime:5,
+recipe:[
+["Metal Fragments",5],
+["Gun Powder",5],
+["Sulfur",5]
+]
+},
+
+{
+name:"Rocket",
+shortname:"ammo.rocket.basic",
+category:"Ammo",
+id:649603426,
+stack:3,
+craftable:true,
+workbench:3,
+craftTime:10,
+recipe:[
+["Metal Fragments",100],
+["Gun Powder",150],
+["Sulfur",50]
+]
+},
+
+{
+name:"High Velocity Rocket",
+shortname:"ammo.rocket.hv",
+category:"Ammo",
+id:-1841918730,
+stack:3,
+craftable:true,
+workbench:3,
+craftTime:10,
+recipe:[
+["Metal Fragments",100],
+["Gun Powder",100]
+]
+},
+
+{
+name:"Incendiary Rocket",
+shortname:"ammo.rocket.fire",
+category:"Ammo",
+id:1638322904,
+stack:3,
+craftable:true,
+workbench:3,
+craftTime:10,
+recipe:[
+["Metal Fragments",100],
+["Gun Powder",150],
+["Sulfur",50]
+]
+},
+
+{
+name:"40mm Shotgun Round",
+shortname:"ammo.grenadelauncher.shotgun",
+category:"Ammo",
+id:-1123473824,
+stack:6,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"40mm HE Grenade",
+shortname:"ammo.grenadelauncher.he",
+category:"Ammo",
+id:349762871,
+stack:6,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+/* ---------------- WEAPONS ---------------- */
+
+{
+name:"Assault Rifle",
+shortname:"rifle.ak",
+category:"Weapon",
+id:1545779598,
+stack:1,
+craftable:true,
+workbench:3,
+craftTime:60,
+recipe:[
+["Metal Fragments",200],
+["High Quality Metal",50],
+["Wood",100]
+]
+},
+
+{
+name:"LR-300 Assault Rifle",
+shortname:"rifle.lr300",
+category:"Weapon",
+id:-1812555177,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Bolt Action Rifle",
+shortname:"rifle.bolt",
+category:"Weapon",
+id:-55660037,
+stack:1,
+craftable:true,
+workbench:3,
+craftTime:60,
+recipe:[
+["Metal Fragments",200],
+["High Quality Metal",20],
+["Wood",100]
+]
+},
+
+{
+name:"L96 Rifle",
+shortname:"rifle.l96",
+category:"Weapon",
+id:-778367295,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Thompson",
+shortname:"smg.thompson",
+category:"Weapon",
+id:-1758372725,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Metal Fragments",100],
+["High Quality Metal",10],
+["Wood",100]
+]
+},
+
+{
+name:"MP5A4",
+shortname:"smg.mp5",
+category:"Weapon",
+id:1318558775,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Custom SMG",
+shortname:"smg.2",
+category:"Weapon",
+id:1796682209,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Metal Fragments",100],
+["High Quality Metal",10],
+["Wood",100]
+]
+},
+
+{
+name:"Revolver",
+shortname:"pistol.revolver",
+category:"Weapon",
+id:649912614,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Metal Fragments",125],
+["High Quality Metal",25]
+]
+},
+
+{
+name:"Python Revolver",
+shortname:"pistol.python",
+category:"Weapon",
+id:-852563019,
+stack:1,
+craftable:true,
+workbench:3,
+craftTime:45,
+recipe:[
+["Metal Fragments",150],
+["High Quality Metal",10],
+["Wood",100]
+]
+},
+
+{
+name:"Semi-Automatic Pistol",
+shortname:"pistol.semiauto",
+category:"Weapon",
+id:-852563019,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:30,
+recipe:[
+["Metal Fragments",100],
+["High Quality Metal",10]
+]
+},
+
+{
+name:"Nailgun",
+shortname:"pistol.nailgun",
+category:"Weapon",
+id:-174031188,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Metal Fragments",75],
+["High Quality Metal",5]
+]
+},
+
+{
+name:"Hunting Bow",
+shortname:"bow.hunting",
+category:"Weapon",
+id:144003614,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Wood",200],
+["Cloth",50],
+["Rope",1]
+]
+},
+
+{
+name:"Crossbow",
+shortname:"crossbow",
+category:"Weapon",
+id:1428021644,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",200],
+["Metal Fragments",75],
+["Rope",2]
+]
+},
+
+{
+name:"Compound Bow",
+shortname:"bow.compound",
+category:"Weapon",
+id:-765183617,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Wood",100],
+["Metal Fragments",50],
+["High Quality Metal",2]
+]
+},
+
+{
+name:"Pump Shotgun",
+shortname:"shotgun.pump",
+category:"Weapon",
+id:795371088,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Metal Fragments",100],
+["High Quality Metal",15],
+["Wood",100]
+]
+},
+
+{
+name:"Double Barrel Shotgun",
+shortname:"shotgun.double",
+category:"Weapon",
+id:-765183617,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Metal Fragments",175],
+["Wood",100]
+]
+},
+
+{
+name:"SPAS-12 Shotgun",
+shortname:"shotgun.spas12",
+category:"Weapon",
+id:-41440462,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Rocket Launcher",
+shortname:"rocket.launcher",
+category:"Weapon",
+id:-262590403,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:60,
+recipe:[
+["Metal Fragments",150],
+["High Quality Metal",50],
+["Wood",100]
+]
+},
+
+/* ---------------- TOOLS ---------------- */
+
+{
+name:"Stone Hatchet",
+shortname:"stonehatchet",
+category:"Tool",
+id:-1368584029,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Wood",200],
+["Stone",100]
+]
+},
+
+{
+name:"Stone Pickaxe",
+shortname:"stone.pickaxe",
+category:"Tool",
+id:-194953424,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Wood",200],
+["Stone",100]
+]
+},
+
+{
+name:"Hatchet",
+shortname:"hatchet",
+category:"Tool",
+id:-1252059217,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",100],
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Pickaxe",
+shortname:"pickaxe",
+category:"Tool",
+id:-1368584029,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",100],
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Jackhammer",
+shortname:"jackhammer",
+category:"Tool",
+id:-1368584029,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Chainsaw",
+shortname:"chainsaw",
+category:"Tool",
+id:-141665516,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Building Plan",
+shortname:"building.planner",
+category:"Tool",
+id:-2069578888,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Wood",20]
+]
+},
+
+{
+name:"Hammer",
+shortname:"hammer",
+category:"Tool",
+id:-639496030,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Wood",100]
+]
+},
+
+{
+name:"Torch",
+shortname:"torch",
+category:"Tool",
+id:-524374820,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Wood",30],
+["Cloth",1],
+["Low Grade Fuel",5]
+]
+},
+
+/* ---------------- COMPONENTS ---------------- */
+
+{
+name:"Rope",
+shortname:"rope",
+category:"Component",
+id:-256877041,
+stack:50,
+craftable:true,
+workbench:0,
+craftTime:10,
+recipe:[
+["Cloth",15]
+]
+},
+
+{
+name:"Gears",
+shortname:"gears",
+category:"Component",
+id:-128947087,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Metal Spring",
+shortname:"metalspring",
+category:"Component",
+id:-1021495308,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Metal Blade",
+shortname:"metalblade",
+category:"Component",
+id:-388646440,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Metal Pipe",
+shortname:"metalpipe",
+category:"Component",
+id:-1978999527,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Semi Automatic Body",
+shortname:"semibody",
+category:"Component",
+id:-1978999527,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"SMG Body",
+shortname:"smgbody",
+category:"Component",
+id:-2093050469,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Rifle Body",
+shortname:"riflebody",
+category:"Component",
+id:-1144967389,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Targeting Computer",
+shortname:"targeting.computer",
+category:"Component",
+id:-1950721390,
+stack:5,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Tech Trash",
+shortname:"techparts",
+category:"Component",
+id:-1252059217,
+stack:100,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Road Signs",
+shortname:"roadsigns",
+category:"Component",
+id:-847065182,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Tarp",
+shortname:"tarp",
+category:"Component",
+id:2019042823,
+stack:50,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Sewing Kit",
+shortname:"sewingkit",
+category:"Component",
+id:1234880403,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+/* ---------------- CONSTRUCTION ---------------- */
+
+{
+name:"Tool Cupboard",
+shortname:"cupboard.tool",
+category:"Construction",
+id:-97956382,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Wood",100]
+]
+},
+
+{
+name:"Sleeping Bag",
+shortname:"sleepingbag",
+category:"Construction",
+id:-1754948964,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Cloth",100]
+]
+},
+
+{
+name:"Wooden Door",
+shortname:"door.hinged.wood",
+category:"Construction",
+id:-148794216,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Wood",300]
+]
+},
+
+{
+name:"Sheet Metal Door",
+shortname:"door.hinged.metal",
+category:"Construction",
+id:-148794216,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:30,
+recipe:[
+["Metal Fragments",150]
+]
+},
+
+{
+name:"Garage Door",
+shortname:"wall.frame.garagedoor",
+category:"Construction",
+id:-148794216,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Metal Fragments",300],
+["High Quality Metal",10]
+]
+},
+
+{
+name:"Armored Door",
+shortname:"door.hinged.toptier",
+category:"Construction",
+id:-1571725662,
+stack:1,
+craftable:true,
+workbench:3,
+craftTime:60,
+recipe:[
+["High Quality Metal",20]
+]
+},
+
+{
+name:"Code Lock",
+shortname:"lock.code",
+category:"Construction",
+id:-975723312,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Key Lock",
+shortname:"lock.key",
+category:"Construction",
+id:-850982208,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Metal Fragments",75]
+]
+},
+
+{
+name:"Wooden Box",
+shortname:"woodbox",
+category:"Construction",
+id:-180129657,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Wood",100]
+]
+},
+
+{
+name:"Large Wood Box",
+shortname:"box.wooden.large",
+category:"Construction",
+id:-180129657,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",250]
+]
+},
+
+{
+name:"Furnace",
+shortname:"furnace",
+category:"Construction",
+id:1160881421,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:30,
+recipe:[
+["Stone",200],
+["Wood",100],
+["Low Grade Fuel",50]
+]
+},
+
+{
+name:"Large Furnace",
+shortname:"furnace.large",
+category:"Construction",
+id:-1992717673,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:60,
+recipe:[
+["Stone",500],
+["Wood",100],
+["High Quality Metal",50]
+]
+},
+
+{
+name:"Small Oil Refinery",
+shortname:"small.oil.refinery",
+category:"Construction",
+id:-129329628,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:45,
+recipe:[
+["Metal Fragments",200],
+["High Quality Metal",100],
+["Stone",500]
+]
+},
+
+{
+name:"Research Table",
+shortname:"research.table",
+category:"Construction",
+id:-1861522751,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",200],
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Repair Bench",
+shortname:"repairbench",
+category:"Construction",
+id:-1488398114,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",125],
+["Metal Fragments",50]
+]
+},
+
+{
+name:"Workbench Level 1",
+shortname:"workbench1",
+category:"Construction",
+id:-1883959124,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:60,
+recipe:[
+["Wood",500],
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Workbench Level 2",
+shortname:"workbench2",
+category:"Construction",
+id:-418967578,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:60,
+recipe:[
+["Wood",500],
+["Metal Fragments",500],
+["High Quality Metal",20]
+]
+},
+
+{
+name:"Workbench Level 3",
+shortname:"workbench3",
+category:"Construction",
+id:1524187186,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:60,
+recipe:[
+["Wood",1000],
+["Metal Fragments",1000],
+["High Quality Metal",100]
+]
+},
+
+/* ---------------- MEDICAL ---------------- */
+
+{
+name:"Bandage",
+shortname:"bandage",
+category:"Medical",
+id:-2072273936,
+stack:3,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Cloth",4]
+]
+},
+
+{
+name:"Medical Syringe",
+shortname:"syringe.medical",
+category:"Medical",
+id:1079279582,
+stack:2,
+craftable:true,
+workbench:2,
+craftTime:15,
+recipe:[
+["Cloth",15],
+["Metal Fragments",10],
+["High Quality Metal",1]
+]
+},
+
+{
+name:"Large Medkit",
+shortname:"largemedkit",
+category:"Medical",
+id:-1677315907,
+stack:1,
+craftable:true,
+workbench:2,
+craftTime:30,
+recipe:[
+["Cloth",50],
+["Metal Fragments",20]
+]
+},
+
+/* ---------------- FOOD ---------------- */
+
+{
+name:"Cooked Pork",
+shortname:"bearmeat.cooked",
+category:"Food",
+id:-1879881856,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Cooked Chicken",
+shortname:"chicken.cooked",
+category:"Food",
+id:1548387136,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Cooked Deer Meat",
+shortname:"deermeat.cooked",
+category:"Food",
+id:-1509859203,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Cooked Horse Meat",
+shortname:"horsemeat.cooked",
+category:"Food",
+id:-1962971656,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Cooked Wolf Meat",
+shortname:"wolfmeat.cooked",
+category:"Food",
+id:-989755543,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Corn",
+shortname:"corn",
+category:"Food",
+id:-778875547,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Pumpkin",
+shortname:"pumpkin",
+category:"Food",
+id:-567909622,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Potato",
+shortname:"potato",
+category:"Food",
+id:-2086922672,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Apple",
+shortname:"apple",
+category:"Food",
+id:-100858101,
+stack:20,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+/* ---------------- GENERAL ---------------- */
+
+{
+name:"Low Grade Fuel",
+shortname:"lowgradefuel",
+category:"General",
+id:281787153,
+stack:500,
+craftable:true,
+workbench:0,
+craftTime:5,
+recipe:[
+["Animal Fat",3],
+["Cloth",1]
+]
+},
+
+{
+name:"Water",
+shortname:"water",
+category:"General",
+id:-962283258,
+stack:1000,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Empty Can Of Beans",
+shortname:"can.beans.empty",
+category:"General",
+id:-2086922672,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Empty Can Of Tuna",
+shortname:"can.tuna.empty",
+category:"General",
+id:-17868282,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+/* ---------------- ATTIRE ---------------- */
+
+{
+name:"Wood Armor Helmet",
+shortname:"wood.armor.helmet",
+category:"Attire",
+id:1553078977,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",100],
+["Cloth",50]
+]
+},
+
+{
+name:"Wood Armor Pants",
+shortname:"wood.armor.pants",
+category:"Attire",
+id:-1654518491,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",150],
+["Cloth",75]
+]
+},
+
+{
+name:"Wood Chestplate",
+shortname:"wood.armor.jacket",
+category:"Attire",
+id:-1654518491,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Wood",300],
+["Cloth",100]
+]
+},
+
+{
+name:"Hide Boots",
+shortname:"attire.hide.boots",
+category:"Attire",
+id:794356786,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Leather",30],
+["Cloth",10]
+]
+},
+
+{
+name:"Hide Pants",
+shortname:"attire.hide.pants",
+category:"Attire",
+id:-157942664,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Leather",50],
+["Cloth",15]
+]
+},
+
+{
+name:"Hide Vest",
+shortname:"attire.hide.poncho",
+category:"Attire",
+id:-1773144852,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Leather",50],
+["Cloth",15]
+]
+},
+
+{
+name:"Hide Skirt",
+shortname:"attire.hide.skirt",
+category:"Attire",
+id:-1773144852,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Leather",50],
+["Cloth",15]
+]
+},
+
+/* ---------------- ELECTRICAL ---------------- */
+
+{
+name:"Wire Tool",
+shortname:"wiretool",
+category:"Electrical",
+id:-2001260025,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",100]
+]
+},
+
+{
+name:"Electrical Branch",
+shortname:"electrical.branch",
+category:"Electrical",
+id:1171735914,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"Blocker",
+shortname:"electric.blocker",
+category:"Electrical",
+id:-690968985,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"Switch",
+shortname:"electric.switch",
+category:"Electrical",
+id:-216999575,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"Pressure Pad",
+shortname:"electric.pressurepad",
+category:"Electrical",
+id:-216999575,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"AND Switch",
+shortname:"electric.and",
+category:"Electrical",
+id:-216999575,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"OR Switch",
+shortname:"electric.or",
+category:"Electrical",
+id:-216999575,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+{
+name:"RAND Switch",
+shortname:"electric.random.switch",
+category:"Electrical",
+id:-216999575,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:15,
+recipe:[
+["Metal Fragments",50]
+]
+},
+
+/* ---------------- FUN ---------------- */
+
+{
+name:"Boom Box",
+shortname:"boombox",
+category:"Fun",
+id:-1596877429,
+stack:1,
+craftable:true,
+workbench:1,
+craftTime:30,
+recipe:[
+["Metal Fragments",100],
+["High Quality Metal",5]
+]
+},
+
+{
+name:"Cassette",
+shortname:"cassette",
+category:"Fun",
+id:-1330640246,
+stack:1,
+craftable:false,
+workbench:0,
+craftTime:0,
+recipe:[]
+},
+
+{
+name:"Candle",
+shortname:"candle",
+category:"Fun",
+id:-323967622,
+stack:10,
+craftable:true,
+workbench:0,
+craftTime:10,
+recipe:[
+["Cloth",5],
+["Low Grade Fuel",10]
+]
+},
+
+/* ---------------- MISC ---------------- */
+
+{
+name:"F1 Grenade",
+shortname:"grenade.f1",
+category:"Misc",
+id:-1308622549,
+stack:10,
+craftable:true,
+workbench:2,
+craftTime:30,
+recipe:[
+["Metal Fragments",50],
+["Gun Powder",60]
+]
+},
+
+{
+name:"Bean Can Grenade",
+shortname:"grenade.beancan",
+category:"Misc",
+id:-1673693549,
+stack:10,
+craftable:true,
+workbench:1,
+craftTime:20,
+recipe:[
+["Metal Fragments",60],
+["Gun Powder",20]
+]
+},
+
+{
+name:"Satchel Charge",
+shortname:"explosive.satchel",
+category:"Misc",
+id:-1870097110,
+stack:10,
+craftable:true,
+workbench:2,
+craftTime:30,
+recipe:[
+["Small Stash",1],
+["Rope",1],
+["Beancan Grenade",4],
+["Low Grade Fuel",3]
+]
+},
+
+{
+name:"C4",
+shortname:"explosive.timed",
+category:"Misc",
+id:-1870097110,
+stack:10,
+craftable:true,
+workbench:3,
+craftTime:30,
+recipe:[
+["Tech Trash",20],
+["Explosives",20]
+]
+},
+
+{
+name:"Explosives",
+shortname:"explosives",
+category:"Misc",
+id:-592016202,
+stack:20,
+craftable:true,
+workbench:3,
+craftTime:10,
+recipe:[
+["Gun Powder",50],
+["Low Grade Fuel",3],
+["Sulfur",10],
+["Metal Fragments",10]
+]
+},
+
+{
+name:"Small Stash",
+shortname:"stash.small",
+category:"Misc",
+id:-369760990,
+stack:1,
+craftable:true,
+workbench:0,
+craftTime:15,
+recipe:[
+["Cloth",10]
+]
+}
+
+];
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+
+function showSection(id,button){
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section=>{
+            section.classList.remove("active");
+        });
+
+    const target=
+        document.getElementById(id);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(btn=>{
+            btn.classList.remove("active");
+        });
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    window.scrollTo({
+        top:document.querySelector("main").offsetTop-70,
+        behavior:"smooth"
+    });
+}
+
+
+function showSectionById(id){
+
+    const buttons=
+        [...document.querySelectorAll(".nav-btn")];
+
+    const button=
+        buttons.find(btn=>
+            btn.getAttribute("onclick") &&
+            btn.getAttribute("onclick").includes(
+                "'" + id + "'"
+            )
+        );
+
+    showSection(id,button);
+
+}
+
+
+/* ============================================================
+   DECAY
+============================================================
+
+   These values are deliberately kept separate from building
+   costs.
+
+   The calculator converts the selected grade's full decay
+   period into an HP-per-hour rate and displays every 100 HP.
+============================================================ */
+
+const DECAY_DATA={
+
+twig:{
+    name:"Twig",
+    hp:10,
+    hours:1,
+    description:"Temporary twig building grade."
+},
+
+wood:{
+    name:"Wood",
+    hp:250,
+    hours:3,
+    description:"Wood building grade."
+},
+
+stone:{
+    name:"Stone",
+    hp:500,
+    hours:5,
+    description:"Stone building grade."
+},
+
+metal:{
+    name:"Sheet Metal",
+    hp:1000,
+    hours:8,
+    description:"Sheet metal building grade."
+},
+
+armored:{
+    name:"Armored",
+    hp:2000,
+    hours:12,
+    description:"Armored building grade."
+}
+
+};
+
+
+function formatTime(hours){
+
+    if(!isFinite(hours) || hours<=0){
+        return "0m";
+    }
+
+    let seconds=
+        Math.round(hours*3600);
+
+    const days=
+        Math.floor(seconds/86400);
+
+    seconds%=86400;
+
+    const hoursPart=
+        Math.floor(seconds/3600);
+
+    seconds%=3600;
+
+    const minutes=
+        Math.floor(seconds/60);
+
+    const secondsPart=
+        seconds%60;
+
+    const parts=[];
+
+    if(days)
+        parts.push(days+"d");
+
+    if(hoursPart)
+        parts.push(hoursPart+"h");
+
+    if(minutes)
+        parts.push(minutes+"m");
+
+    if(secondsPart && !days)
+        parts.push(secondsPart+"s");
+
+    return parts.join(" ") || "0m";
+}
+
+
+function calculateDecay(){
+
+    const grade=
+        document.getElementById("decayGrade").value;
+
+    const data=
+        DECAY_DATA[grade];
+
+    let hp=
+        Number(
+            document.getElementById("currentHP").value
+        );
+
+    if(!isFinite(hp))
+        hp=0;
+
+    hp=
+        Math.max(
+            0,
+            Math.min(hp,data.hp)
+        );
+
+    const hpPerHour=
+        data.hp/data.hours;
+
+    const hoursRemaining=
+        hp/hpPerHour;
+
+    const timePer100=
+        100/hpPerHour;
+
+    document.getElementById("decayName")
+        .textContent=data.name;
+
+    document.getElementById("decayDescription")
+        .textContent=data.description;
+
+    document.getElementById("decayTime")
+        .textContent=
+        formatTime(hoursRemaining);
+
+    document.getElementById("maxHP")
+        .textContent=
+        data.hp.toLocaleString();
+
+    document.getElementById("hpRate")
+        .textContent=
+        hpPerHour.toFixed(2)+" HP/hour";
+
+    document.getElementById("hundredTime")
+        .textContent=
+        formatTime(timePer100);
+
+    document.getElementById("remainingHP")
+        .textContent=
+        hp.toLocaleString();
+
+    document.getElementById("hpProgress")
+        .style.width=
+        ((hp/data.hp)*100)+"%";
+
+
+    const tbody=
+        document.getElementById("decayTable");
+
+    tbody.innerHTML="";
+
+
+    for(
+        let lost=100;
+        lost<=data.hp;
+        lost+=100
+    ){
+
+        const remaining=
+            Math.max(
+                0,
+                data.hp-lost
+            );
+
+        const totalTime=
+            lost/hpPerHour;
+
+        const row=
+            document.createElement("tr");
+
+        row.innerHTML=`
+
+            <td>
+                ${lost.toLocaleString()} HP
+            </td>
+
+            <td>
+                ${remaining.toLocaleString()} HP
+            </td>
+
+            <td>
+                ${formatTime(timePer100)}
+            </td>
+
+            <td>
+                ${formatTime(totalTime)}
+            </td>
+
+        `;
+
+        tbody.appendChild(row);
+    }
+
+}
+
+
+/* ============================================================
+   BUILDING COSTS
+============================================================ */
+
+const BUILDING_DATA={
+
+foundation:{
+name:"Square Foundation",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",200],
+Stone:["Stone",300],
+"Sheet Metal":["Metal Fragments",200],
+Armored:["High Quality Metal",25]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+triangle:{
+name:"Triangle Foundation",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",100],
+Stone:["Stone",150],
+"Sheet Metal":["Metal Fragments",100],
+Armored:["High Quality Metal",13]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+wall:{
+name:"Wall",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",200],
+Stone:["Stone",300],
+"Sheet Metal":["Metal Fragments",200],
+Armored:["High Quality Metal",25]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+halfwall:{
+name:"Half Wall",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",100],
+Stone:["Stone",150],
+"Sheet Metal":["Metal Fragments",100],
+Armored:["High Quality Metal",13]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+lowwall:{
+name:"Low Wall",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",100],
+Stone:["Stone",150],
+"Sheet Metal":["Metal Fragments",100],
+Armored:["High Quality Metal",13]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+floor:{
+name:"Floor / Ceiling",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",200],
+Stone:["Stone",300],
+"Sheet Metal":["Metal Fragments",200],
+Armored:["High Quality Metal",25]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+doorway:{
+name:"Doorway",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",200],
+Stone:["Stone",300],
+"Sheet Metal":["Metal Fragments",200],
+Armored:["High Quality Metal",25]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+},
+
+window:{
+name:"Window",
+costs:{
+Twig:["Wood",0],
+Wood:["Wood",200],
+Stone:["Stone",300],
+"Sheet Metal":["Metal Fragments",200],
+Armored:["High Quality Metal",25]
+},
+hp:{
+Twig:10,
+Wood:250,
+Stone:500,
+"Sheet Metal":1000,
+Armored:2000
+}
+}
+
+};
+
+
+function renderBuilding(){
+
+    const key=
+        document.getElementById("buildingPiece").value;
+
+    const data=
+        BUILDING_DATA[key];
+
+    document.getElementById("buildingTitle")
+        .textContent=data.name;
+
+    const tbody=
+        document.getElementById("buildingTable");
+
+    tbody.innerHTML="";
+
+    Object.keys(data.costs)
+        .forEach(grade=>{
+
+            const cost=
+                data.costs[grade];
+
+            const row=
+                document.createElement("tr");
+
+            row.innerHTML=`
+
+                <td>
+                    <strong>
+                        ${grade}
+                    </strong>
+                </td>
+
+                <td>
+                    ${cost[0]}
+                </td>
+
+                <td>
+                    ${cost[1].toLocaleString()}
+                </td>
+
+                <td>
+                    ${data.hp[grade].toLocaleString()}
+                </td>
+
+            `;
+
+            tbody.appendChild(row);
+
+        });
+
+}
+
+
+/* ============================================================
+   ITEM DATABASE
+============================================================ */
+
+let currentPage=1;
+
+let filteredItems=[...RUST_ITEMS];
+
+
+function renderItems(){
+
+    const search=
+        document.getElementById("itemSearch")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const category=
+        document.getElementById("itemCategory")
+            .value;
+
+
+    filteredItems=
+        RUST_ITEMS.filter(item=>{
+
+            const matchesSearch=
+                !search ||
+                item.name
+                    .toLowerCase()
+                    .includes(search) ||
+                item.shortname
+                    .toLowerCase()
+                    .includes(search) ||
+                item.category
+                    .toLowerCase()
+                    .includes(search);
+
+            const matchesCategory=
+                category==="all" ||
+                item.category===category;
+
+            return matchesSearch &&
+                   matchesCategory;
+
+        });
+
+
+    const perPage=
+        Number(
+            document.getElementById("itemsPerPage").value
+        );
+
+    const totalPages=
+        Math.max(
+            1,
+            Math.ceil(
+                filteredItems.length/perPage
+            )
+        );
+
+    if(currentPage>totalPages)
+        currentPage=totalPages;
+
+
+    const start=
+        (currentPage-1)*perPage;
+
+    const pageItems=
+        filteredItems.slice(
+            start,
+            start+perPage
+        );
+
+
+    const tbody=
+        document.getElementById("itemRows");
+
+    tbody.innerHTML="";
+
+
+    pageItems.forEach((item,index)=>{
+
+        const row=
+            document.createElement("tr");
+
+        row.innerHTML=`
+
+            <td>
+
+                <span
+                    class="item-link"
+                    data-index="${start+index}">
+                    ${escapeHTML(item.name)}
+                </span>
+
+            </td>
+
+            <td>
+                <code>
+                    ${escapeHTML(item.shortname)}
+                </code>
+            </td>
+
+            <td>
+                <span class="badge">
+                    ${escapeHTML(item.category)}
+                </span>
+            </td>
+
+            <td>
+
+                ${
+                    item.craftable
+                    ?
+                    '<span class="badge green">YES</span>'
+                    :
+                    '<span class="badge red">NO</span>'
+                }
+
+            </td>
+
+            <td>
+                ${
+                    item.workbench
+                    ?
+                    "Level "+item.workbench
+                    :
+                    "None"
+                }
+            </td>
+
+        `;
+
+
+        row
+            .querySelector(".item-link")
+            .addEventListener(
+                "click",
+                ()=>{
+                    showItem(
+                        filteredItems[start+index]
+                    );
+                }
+            );
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    document.getElementById("databaseCount")
+        .textContent=
+        RUST_ITEMS.length.toLocaleString();
+
+    document.getElementById("totalItems")
+        .textContent=
+        RUST_ITEMS.length.toLocaleString();
+
+    document.getElementById("matchingItems")
+        .textContent=
+        filteredItems.length.toLocaleString();
+
+    document.getElementById("currentPageText")
+        .textContent=
+        currentPage+" / "+totalPages;
+
+
+    renderPagination(totalPages);
+
+}
+
+
+function renderPagination(totalPages){
+
+    const container=
+        document.getElementById("pagination");
+
+    container.innerHTML="";
+
+
+    if(totalPages<=1)
+        return;
+
+
+    const previous=
+        document.createElement("button");
+
+    previous.className="page-btn";
+
+    previous.textContent="‹ Previous";
+
+    previous.disabled=
+        currentPage===1;
+
+    previous.onclick=()=>{
+        currentPage--;
+        renderItems();
+    };
+
+    container.appendChild(previous);
+
+
+    let start=
+        Math.max(
+            1,
+            currentPage-2
+        );
+
+    let end=
+        Math.min(
+            totalPages,
+            start+4
+        );
+
+    if(end-start<4){
+
+        start=
+            Math.max(
+                1,
+                end-4
+            );
+
+    }
+
+
+    for(
+        let page=start;
+        page<=end;
+        page++
+    ){
+
+        const button=
+            document.createElement("button");
+
+        button.className="page-btn";
+
+        if(page===currentPage)
+            button.classList.add("active");
+
+        button.textContent=page;
+
+        button.onclick=()=>{
+            currentPage=page;
+            renderItems();
+
+            document
+                .getElementById("items")
+                .scrollIntoView({
+                    behavior:"smooth",
+                    block:"start"
+                });
+        };
+
+        container.appendChild(button);
+
+    }
+
+
+    const next=
+        document.createElement("button");
+
+    next.className="page-btn";
+
+    next.textContent="Next ›";
+
+    next.disabled=
+        currentPage===totalPages;
+
+    next.onclick=()=>{
+        currentPage++;
+        renderItems();
+    };
+
+    container.appendChild(next);
+
+}
+
+
+/* ============================================================
+   ITEM DETAILS
+============================================================ */
+
+function showItem(item){
+
+    const detail=
+        document.getElementById("itemDetail");
+
+    detail.classList.add("show");
+
+
+    document.getElementById("detailName")
+        .textContent=item.name;
+
+    document.getElementById("detailShortname")
+        .textContent=item.shortname;
+
+    document.getElementById("detailCategory")
+        .textContent=item.category;
+
+    document.getElementById("detailStack")
+        .textContent=
+        item.stack
+        ? item.stack.toLocaleString()
+        : "—";
+
+    document.getElementById("detailId")
+        .textContent=
+        item.id ?? "—";
+
+    document.getElementById("detailCraftable")
+        .textContent=
+        item.craftable
+        ? "Yes"
+        : "No";
+
+    document.getElementById("detailWorkbench")
+        .textContent=
+        item.workbench
+        ? "Level "+item.workbench
+        : "None";
+
+    document.getElementById("detailCraftTime")
+        .textContent=
+        item.craftTime
+        ? item.craftTime+" sec"
+        : "—";
+
+
+    const recipe=
+        document.getElementById("recipe");
+
+    if(
+        item.craftable &&
+        item.recipe &&
+        item.recipe.length
+    ){
+
+        recipe.innerHTML=
+            item.recipe
+                .map(ingredient=>`
+
+                    <div class="recipe-row">
+
+                        <span>
+                            ${escapeHTML(
+                                ingredient[0]
+                            )}
+                        </span>
+
+                        <strong>
+                            ${ingredient[1]
+                                .toLocaleString()}
+                        </strong>
+
+                    </div>
+
+                `)
+                .join("");
+
+    }else{
+
+        recipe.innerHTML=`
+
+            <div class="warning">
+
+                This item is not marked as craftable
+                in the embedded record, so no crafting
+                recipe is displayed.
+
+            </div>
+
+        `;
+
+    }
+
+
+    document.getElementById("detailStatus")
+        .textContent=
+        "Embedded in this HTML file";
+
+
+    detail.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+
+/* ============================================================
+   TABLE SEARCH
+============================================================ */
+
+function filterTable(inputId,tbodyId){
+
+    const query=
+        document.getElementById(inputId)
+            .value
+            .toLowerCase();
+
+    document
+        .getElementById(tbodyId)
+        .querySelectorAll("tr")
+        .forEach(row=>{
+
+            row.style.display=
+                row.innerText
+                    .toLowerCase()
+                    .includes(query)
+                    ? ""
+                    : "none";
+
+        });
+
+}
+
+
+/* ============================================================
+   SAFE HTML
+============================================================ */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* ============================================================
+   INITIALIZE
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    ()=>{
+
+        calculateDecay();
+
+        renderBuilding();
+
+        renderItems();
+
+    }
+);
+
+</script>
+```html
+<div class="source-disclaimer">
+    <p>
+        Rust Intel is an independent fan-made reference site. Information is compiled
+        for reference purposes and may vary depending on Rust updates and server configuration.
+    </p>
+
+    <p>
+        Rust is developed and published by
+        <a href="https://rust.facepunch.com/" target="_blank" rel="noopener noreferrer">
+            Facepunch Studios
+        </a>.
+        Official Rust website:
+        <a href="https://rust.facepunch.com/" target="_blank" rel="noopener noreferrer">
+            rust.facepunch.com
+        </a>
+    </p>
+
+    <p>
+        This website is not affiliated with, endorsed by, or sponsored by Facepunch Studios.
+    </p>
+</div>
+
+<style>
+    .source-disclaimer {
+        text-align: center;
+        margin: 40px auto 25px;
+        padding: 0 20px;
+        max-width: 900px;
+        color: #888;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .source-disclaimer p {
+        margin: 0 0 10px;
+    }
+
+    .source-disclaimer a {
+        color: #f47b20;
+        text-decoration: none;
+    }
+
+    .source-disclaimer a:hover {
+        color: #ff963d;
+        text-decoration: underline;
+    }
+</style>
+</body>
+</html>
+```
